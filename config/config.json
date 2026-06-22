@@ -1,0 +1,6 @@
+{
+  "input_file": "/opt/airflow/data/sales.csv",
+  "output_file": "/opt/airflow/data/output.csv",
+  "sqlite_db": "/opt/airflow/data/sales.db",
+  "amount_threshold": 150
+}
