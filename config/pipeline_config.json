@@ -1,0 +1,7 @@
+{
+    "source_file": "/opt/airflow/data/output.csv",
+    "sqlite_db": "/opt/airflow/data/sales.db",
+    "postgres_table": "fact_sales",
+    "enable_quality_check": true,
+    "enable_alerts": true
+}

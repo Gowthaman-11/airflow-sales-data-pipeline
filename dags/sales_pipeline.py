@@ -62,13 +62,24 @@ with DAG(
         task_id="alert_task",
         bash_command="python /opt/airflow/scripts/send_alert.py"
     )
-
-    (
-        transform_sales
+    
+    read_config = BashOperator(
+        task_id="read_config",
+        bash_command="python /opt/airflow/scripts/read_config.py"
+    )
+    
+    scd_type2 = BashOperator(
+        task_id="scd_type2",
+        bash_command="python /opt/airflow/scripts/scd_type2.py"
+   )
+    ( 
+         read_config
+        >> transform_sales
         >> validate_sales
         >> data_quality
         >> load_to_sqlite
         >> load_dim_fact
+        >> scd_type2
         >> generate_kpis
         >> load_to_postgres
         >> incremental_load

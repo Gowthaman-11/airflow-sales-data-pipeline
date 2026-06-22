@@ -1,20 +1,35 @@
+import sqlite3
 import pandas as pd
 from sqlalchemy import create_engine
 
-engine = create_engine(
-    "postgresql://airflow:airflow@postgres:5432/airflow"
+sqlite_conn = sqlite3.connect("/opt/airflow/data/sales.db")
+
+dim_customer = pd.read_sql(
+    "SELECT * FROM dim_customer",
+    sqlite_conn
 )
 
-df = pd.read_csv("/opt/airflow/data/output.csv")
+fact_sales = pd.read_sql(
+    "SELECT * FROM fact_sales",
+    sqlite_conn
+)
 
-customers = df[["customer"]].drop_duplicates()
-customers.columns = ["customer_name"]
+engine = create_engine(
+    "postgresql://airflow:airflow@airflow-postgres:5432/airflow"
+)
 
-customers.to_sql(
+dim_customer.to_sql(
     "dim_customer",
     engine,
-    if_exists="append",
+    if_exists="replace",
     index=False
 )
 
-print("Customer Dimension Loaded")
+fact_sales.to_sql(
+    "fact_sales",
+    engine,
+    if_exists="replace",
+    index=False
+)
+
+print("Data Loaded To PostgreSQL Successfully")
